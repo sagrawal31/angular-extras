@@ -22,6 +22,10 @@ angular.element.prototype.find = function(selector) {
     return angular.element(this[0].querySelector(selector));
 };
 
+angular.find = function(selector) {
+    return angular.element(document.querySelector('body')).find(selector);
+};
+
 /**
  * @ngdoc function
  * @name angular.element.prototype.findAll
@@ -36,6 +40,10 @@ angular.element.prototype.find = function(selector) {
  */
 angular.element.prototype.findAll = function(selector) {
     return angular.element(this[0].querySelectorAll(selector));
+};
+
+angular.findAll = function(selector) {
+    return angular.element(document.querySelector('body')).findAll(selector);
 };
 
 /**
