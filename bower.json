@@ -1,0 +1,24 @@
+{
+  "name": "angular-extras",
+  "description": "A light weight library to provide some extensions to Angular without jQuery.",
+  "main": "src/app.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "angular": "^1.5.5"
+  },
+  "authors": [
+    "Shashank Agrawal <shagrawal99@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sagrawal14/angular-extras.git"
+  }
+}
