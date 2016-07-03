@@ -23,7 +23,7 @@ angular.module('angular.extras.form.directives').directive('autofocus', [functio
  *          </code>
  * @attr focusOn boolean Based on which focus would be applied
  */
-directives.directive('focusOn', ['$timeout', function ($timeout) {
+angular.module('angular.extras.form.directives').directive('focusOn', ['$timeout', function ($timeout) {
   return {
     restrict: 'A',
     link: function (scope, element, attrs) {
