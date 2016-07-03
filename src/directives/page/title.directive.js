@@ -10,14 +10,14 @@
  * as page title, instead of defining the same for page title.
  */
 angular.module('angular.extras.page.directives').directive('pageTitle', ['$window', function ($window) {
-    return {
-        restrict: 'A',
-        link: function($scope, element, attr) {
-            attr.$observe('pageTitle', function (title) {
-                if (title) {
-                    $window.document.title = title;
-                }
-            });
+  return {
+    restrict: 'A',
+    link: function ($scope, element, attr) {
+      attr.$observe('pageTitle', function (title) {
+        if (title) {
+          $window.document.title = title;
         }
-    };
+      });
+    }
+  };
 }]);

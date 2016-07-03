@@ -10,11 +10,11 @@
  * <url>{{user.linkedin}}</url>
  */
 angular.module('angular.extras.page.directives').directive('url', function () {
-    return {
-        restrict: 'E',
-        replace: true,
-        template: function(element) {
-            return '<a href="' + element.html() + '">' + element.html() + '</a>';
-        }
-    };
+  return {
+    restrict: 'E',
+    replace: true,
+    template: function (element) {
+      return '<a href="' + element.html() + '">' + element.html() + '</a>';
+    }
+  };
 });

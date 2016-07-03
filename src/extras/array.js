@@ -13,19 +13,19 @@
  *
  * anyList.collate(3) == [[1, 2, 3], [4, 5, 6], [7]];
  */
-Array.prototype.collate = function(collateSize) {
-    var collatedList = [];
+Array.prototype.collate = function (collateSize) {
+  var collatedList = [];
 
-    if (collateSize <= 0) {
-        return [];
+  if (collateSize <= 0) {
+    return [];
+  }
+  angular.forEach(this, function (item, index) {
+    if (index % collateSize === 0) {
+      collatedList[Math.floor(index / collateSize)] = [item];
+    } else {
+      collatedList[Math.floor(index / collateSize)].push(item);
     }
-    angular.forEach(this, function(item, index) {
-        if (index % collateSize === 0) {
-            collatedList[Math.floor(index / collateSize)] = [item];
-        } else {
-            collatedList[Math.floor(index / collateSize)].push(item);
-        }
-    });
+  });
 
-    return collatedList;
+  return collatedList;
 };
