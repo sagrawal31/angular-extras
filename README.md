@@ -57,6 +57,8 @@ someDomeElementInDirective.parents('div.foo');       // Find all the parent DIV 
 someDomeElementInDirective.closest('div.foo');       // Find all the parent DIV elements including self with class "foo"
 ```
 
+----------
+
 ### Form Directives
 
 ```html
@@ -86,6 +88,8 @@ Focuses the DOM element based on the expression.
 ```html
 <input type="text" focus-on="isFocus" />
 ```
+
+----------
 
 ### Page Directives
 
@@ -122,8 +126,8 @@ Converts plain HTML email text to a email link.
 Set the page's `<title>` value from any DOM element.
 
 ```html
-<div page-title="Users page"></div>  <!-- Will set <title>Users page</title>
-<div page-title>Friends page</div>  <!-- Will set <title>Friends page</title>
+<div page-title="Users page"></div>  <!-- Will set <title>Users page</title> -->
+<div page-title>Friends page</div>  <!-- Will set <title>Friends page</title> -->
 ```
 
 #### url
