@@ -21,7 +21,9 @@ module.exports = function (grunt) {
           '<%=yeoman.dist %>/angular-extras-array.min.js': ['<%=yeoman.src %>/extras/array.js'],
           '<%=yeoman.dist %>/angular-extras-form-directives.min.js': ['<%=yeoman.src%>/directives/form/**.js'],
           '<%=yeoman.dist %>/angular-extras-list-directives.min.js': ['<%=yeoman.src%>/directives/list/**.js'],
-          '<%=yeoman.dist %>/angular-extras-page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js']
+          '<%=yeoman.dist %>/angular-extras-page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js'],
+          '<%=yeoman.dist %>/angular-extras-services.min.js': ['<%=yeoman.src%>/services/**.js'],
+          '<%=yeoman.dist %>/angular-extras-factories.min.js': ['<%=yeoman.src%>/factories/**.js']
         }
       }
     },
