@@ -4,7 +4,7 @@
 
 angular
   .module('angular.extras.core.factories')
-  .factory('DomainFactory', function DomainFactory($resource) {
+  .factory('DomainFactory', ['$resource', function($resource) {
 
     return function (url, paramDefaults, actions, options) {
       var resourceActions = {'update': {method: 'PUT'}, 'list': {method: 'GET', isArray: true}};
@@ -17,5 +17,5 @@ angular
         options || {}
       );
     };
-  });
+  }]);
 
