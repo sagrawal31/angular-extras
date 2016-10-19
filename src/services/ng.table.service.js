@@ -4,10 +4,10 @@
 
 angular
   .module('angular.extras.thirdparty.services')
-  .factory('NgTableService', ['NgTableParams', function (NgTableParams) {
+  .factory('NgTableService', ['NgTableParams', '$q', function (NgTableParams, $q) {
 
     return {
-      getTableParams: function (model, customNgTableParameters, additionalParams) {
+      getTableParams: function (model, customNgTableParameters, additionalParams, callback) {
         var baseNgTableParameters = {
           page: 1,            // show first page
           count: 10,
@@ -32,14 +32,23 @@ angular
               order: order
             };
 
-            var queryParams = angular.extend({}, basicParams, additionalParams);
+            var deferred = $q.defer();
 
-            return model.query(queryParams, function (data, headerGetter) {
+            var queryParams = angular.extend({}, basicParams, additionalParams);
+            model.query(queryParams, function (data, headerGetter) {
               var headers = headerGetter();
               params.total(headers['total-count']);
+              if(callback) {
+                callback(data);
+              }
+              if(data.result) {
+                deferred.resolve(data.result);
+              } else {
+                deferred.resolve(data);
+              }
+            });
 
-              return data;
-            }).$promise;
+            return deferred.promise;
           }
         });
       }
