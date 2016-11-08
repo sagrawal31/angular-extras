@@ -15,16 +15,23 @@ module.exports = function (grunt) {
     yeoman: yeomanConfig,
     uglify: {
       build: {
-        files: {
-          '<%=yeoman.dist %>/angular-extras.min.js': ['<%=yeoman.src %>/app.js'],
-          '<%=yeoman.dist %>/angular-extras-dom.min.js': ['<%=yeoman.src %>/extras/dom.js'],
-          '<%=yeoman.dist %>/angular-extras-array.min.js': ['<%=yeoman.src %>/extras/array.js'],
-          '<%=yeoman.dist %>/angular-extras-form-directives.min.js': ['<%=yeoman.src%>/directives/form/**.js'],
-          '<%=yeoman.dist %>/angular-extras-list-directives.min.js': ['<%=yeoman.src%>/directives/list/**.js'],
-          '<%=yeoman.dist %>/angular-extras-page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js'],
-          '<%=yeoman.dist %>/angular-extras-services.min.js': ['<%=yeoman.src%>/services/**.js'],
-          '<%=yeoman.dist %>/angular-extras-factories.min.js': ['<%=yeoman.src%>/factories/**.js']
-        }
+        files: [{
+          '<%=yeoman.dist %>/core.min.js': ['<%=yeoman.src %>/app.js'],
+          '<%=yeoman.dist %>/dom.min.js': ['<%=yeoman.src %>/extras/dom.js'],
+          '<%=yeoman.dist %>/array.min.js': ['<%=yeoman.src %>/extras/array.js'],
+          '<%=yeoman.dist %>/form-directives.min.js': ['<%=yeoman.src%>/directives/form/**.js'],
+          '<%=yeoman.dist %>/list-directives.min.js': ['<%=yeoman.src%>/directives/list/**.js'],
+          '<%=yeoman.dist %>/page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js'],
+          '<%=yeoman.dist %>/factories.min.js': ['<%=yeoman.src%>/factories/**.js']
+        }, {
+          expand: true,
+          cwd: '<%=yeoman.src%>/services',
+          src: '**/*',
+          dest: '<%=yeoman.dist %>',
+          rename: function(dest, matchedSrcPath) {
+            return dest + '/' + matchedSrcPath.replace('.js', '.min.js');
+          }
+        }]
       }
     },
     bump: {
