@@ -7,7 +7,7 @@ angular
   .factory('NgTableService', ['NgTableParams', '$q', function (NgTableParams, $q) {
 
     return {
-      getTableParams: function (model, customNgTableParameters, additionalParams, callback) {
+      getTableParams: function (model, customNgTableParameters, requestParams, settings, callback) {
         var baseNgTableParameters = {
           page: 1,            // show first page
           count: 10,
@@ -18,7 +18,7 @@ angular
 
         angular.extend(baseNgTableParameters, customNgTableParameters);
 
-        return new NgTableParams(baseNgTableParameters, {
+        var initialSettings = {
           getData: function (params) {
             var sorting = params.sorting();
             var sortKey = Object.keys(sorting)[0];
@@ -34,7 +34,7 @@ angular
 
             var deferred = $q.defer();
 
-            var queryParams = angular.extend({}, basicParams, additionalParams);
+            var queryParams = angular.extend({}, basicParams, requestParams);
             model.query(queryParams, function (data, headerGetter) {
               var headers = headerGetter();
               params.total(headers['total-count']);
@@ -50,7 +50,11 @@ angular
 
             return deferred.promise;
           }
-        });
+        };
+
+        angular.extend(initialSettings, settings);
+
+        return new NgTableParams(baseNgTableParameters, initialSettings);
       }
     };
   }]);
