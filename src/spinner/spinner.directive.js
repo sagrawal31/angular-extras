@@ -2,7 +2,13 @@
 
 /* global document */
 
-angular.module('angular.extras.spinner').directive('spinner', ['$templateCache', function ($templateCache) {
+
+/**
+ * Use like <any-element class="some-class" spinner promise="scopePromiseVariable"></any-element>
+ */
+angular.module('angular.extras.spinner').directive('spinner', ['$templateCache', '$injector', function ($templateCache, $injector) {
+  var constantName = 'angular.extras.spinner.global.template';
+
   return {
     restrict: 'A',
     scope: {
@@ -10,21 +16,22 @@ angular.module('angular.extras.spinner').directive('spinner', ['$templateCache',
       template: '='
     },
     link: function ($scope, $element) {
-      var template = '<span class="spinner-wrapper"><i class="fa fa-spin spinner fa-spinner fa-2x"></i></span>';
+      var spinnerTemplate = '<span class="spinner-wrapper"><i class="fa fa-spin spinner fa-spinner fa-2x"></i></span>';
 
       if ($scope.template) {
-        template = $templateCache.get($scope.template);
+        spinnerTemplate = $templateCache.get($scope.template);
+      } else if ($injector.has(constantName)) {
+        spinnerTemplate = $templateCache.get($injector.get(constantName));
       }
 
       function showSpinner() {
         $element.addClass('p-relative disabled');
-        $element.append(template);
+        $element.append(spinnerTemplate);
       }
 
       function hideSpinner() {
         $element.removeClass('disabled');
-        $element.find('.mask').remove();
-        $element.find('.spinner').remove();
+        $element.find('.spinner-wrapper').remove();
       }
 
       $scope.$watch('promise', function (newPromise) {
