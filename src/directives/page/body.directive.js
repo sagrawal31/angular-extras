@@ -32,3 +32,26 @@ angular.module('angular.extras.page.directives').directive('bodyClasses', functi
     }
   };
 });
+
+/**
+ * @ngdoc directive
+ * @name dynamicContent
+ * @service $compile
+ * @description Used to compile the dynamic HTML content.
+ * @example
+ * <code>
+ *    <div dynamic-content="'Sum of 2 and 3 is {{2+3}}'"></div>
+ * <code>
+ */
+angular.module('angular.extras.page.directives').directive('dynamicContent', ['$compile', function ($compile) {
+  return {
+    link: function (scope, element, attrs) {
+      scope.$watch(function (scope) {
+        return scope.$eval(attrs.dynamicContent);
+      }, function (value) {
+        element.html(value);
+        $compile(element.contents())(scope);
+      });
+    }
+  };
+}]);
