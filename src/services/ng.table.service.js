@@ -46,8 +46,10 @@ angular
               } else {
                 deferred.resolve(data);
               }
-            });
+            }, deferred.reject);
 
+            // Make the API call promise available to the NgTableParams instance for external use
+            params.dataPromise = deferred.promise;
             return deferred.promise;
           }
         };

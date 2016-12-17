@@ -56,4 +56,4 @@ angular.module('angular.extras.spinner').directive('spinner', ['$templateCache',
 
 angular.element(document.head).prepend('<style type="text/css">.p-relative{position:relative}' +
   '.spinner-wrapper{z-index:10;font-weight:bold;position:absolute;top:0;left:0;width:100%;height:100%;background;background:rgba(255,255,255,0.7)}' +
-  '.spinner{z-index:10;position:absolute;top:calc(50% - 14px);left:calc(50% - 12.5px)}');
+  '.spinner{z-index:10;position:absolute !important;top:calc(50% - 14px);left:calc(50% - 12.5px)}');
