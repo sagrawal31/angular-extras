@@ -1,6 +1,6 @@
 'use strict';
 
-/* global document */
+/* global document, window */
 
 /**
  * A directive to traverse the cell of any table using the arrow keys like an excel sheet. This directive needs to
@@ -20,6 +20,8 @@
  *     ---------------------
  * 4   | A4 | B4 | C4      |              (C3 having colspan="2")
  *     ---------------------
+ *
+ * See a working example here http://codepen.io/shashank-agrawal/pen/EZjBvz
  */
 angular.module('angular.extras.number.directives').directive('keyboardNavigation', function () {
 
@@ -117,13 +119,28 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
         }
       }
 
+      function scrollViewToCell() {
+        var target = $element.find('td:eq(' + currentActiveCellIndex + ')');
+        if (target.length) {
+          var top = target.offset().top;
+
+          // This will require jQuery. TODO Port to angular
+          if (window.jQuery) {
+            angular.element('html,body').stop().animate({scrollTop: top - 120}, 400);
+          }
+          return false;
+        }
+      }
+
       function remarkActiveCell() {
-        $element.find('.active-cell input,textarea,select').blur();
+        //$element.find('.active-cell input,textarea,select').blur();
         $element.find('.active-cell').removeClass('active-cell');
 
         var $cellToMarkActive = $element.find('tr td:eq(' + currentActiveCellIndex + ')');
         $cellToMarkActive.addClass('active-cell');
         $cellToMarkActive.find('input,textarea,select').focus();
+
+        scrollViewToCell();
       }
 
       // http://stackoverflow.com/a/10655273/2405040
@@ -146,6 +163,7 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
 
         if (arrow) {
           e.preventDefault();
+          e.stopPropagation();
           calculateNextCellIndex(e, arrow);
           remarkActiveCell();
         }
