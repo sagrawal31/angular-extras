@@ -23,6 +23,7 @@ module.exports = function (grunt) {
           '<%=yeoman.dist %>/list-directives.min.js': ['<%=yeoman.src%>/directives/list/**.js'],
           '<%=yeoman.dist %>/number-directives.min.js': ['<%=yeoman.src%>/directives/number/**.js'],
           '<%=yeoman.dist %>/page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js'],
+          '<%=yeoman.dist %>/table-directives.min.js': ['<%=yeoman.src%>/directives/table/**.js'],
           '<%=yeoman.dist %>/factories.min.js': ['<%=yeoman.src%>/factories/**.js'],
           '<%=yeoman.dist %>/spinner.min.js': ['<%=yeoman.src%>/spinner/**.js']
         }, {
