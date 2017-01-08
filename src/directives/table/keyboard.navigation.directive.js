@@ -3,7 +3,8 @@
 /* global document */
 
 /**
- * A directive to traverse the cell of any table using the arrow keys.
+ * A directive to traverse the cell of any table using the arrow keys like an excel sheet. This directive needs to
+ * be applied on a table element.
  */
 angular.module('angular.extras.number.directives').directive('keyboardNavigation', function () {
 
@@ -18,50 +19,48 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
 
   return {
     restrict: 'A',
-    link: function () {
+    link: function ($scope, $element) {
       var currentActiveCellIndex = 0;
 
       function getAboveOrBelowCellIndex(nextOrPreviousRowIndex, currentColumnIndex) {
         var cell = getCellAt(nextOrPreviousRowIndex, currentColumnIndex);
         if (cell.length > 0) {
-          return angular.element('td').index(cell);
+          return $element.find('td').index(cell);
         }
 
         for (var i = 1; i <= currentColumnIndex; i++) {
           cell = getCellAt(nextOrPreviousRowIndex, currentColumnIndex - i);
           if (cell.length > 0) {
-            return angular.element('td').index(cell);
+            return $element.find('td').index(cell);
           }
         }
       }
 
-      function getBelowCellIndex(currentRowIndex, currentColumnIndex) {
+      function getLowerCellIndex(currentRowIndex, currentColumnIndex) {
         return getAboveOrBelowCellIndex(currentRowIndex + 1, currentColumnIndex);
       }
 
-      function getAboveCellIndex(currentRowIndex, currentColumnIndex) {
+      function getUpperCellIndex(currentRowIndex, currentColumnIndex) {
         return getAboveOrBelowCellIndex(currentRowIndex - 1, currentColumnIndex);
       }
 
-      function calculateNextCellIndex(e) {
+      function calculateNextCellIndex(e, arrow) {
+        e.preventDefault();
         var currentActiveCell = angular.element('table td.active-cell');
         var currentColumnIndex = currentActiveCell.index();
         var currentRowIndex = currentActiveCell.parent().index();
 
-        var totalColumns = angular.element('table td').length;
+        var totalColumns = $element.find('td').length;
         var nextActive = 0;
 
-        if (e.keyCode === 37) { // move left or wrap
+        if (arrow === 'left') { // Left or wrap
           nextActive = (currentActiveCellIndex > 0) ? currentActiveCellIndex - 1 : currentActiveCellIndex;
-        }
-        if (e.keyCode === 38) { // move up
-          nextActive = getAboveCellIndex(currentRowIndex, currentColumnIndex);
-        }
-        if (e.keyCode === 39) { // move right or wrap
+        } else if (arrow === 'right') { // Right or wrap
           nextActive = (currentActiveCellIndex < totalColumns - 1) ? currentActiveCellIndex + 1 : currentActiveCellIndex;
-        }
-        if (e.keyCode === 40) { // move down
-          nextActive = getBelowCellIndex(currentRowIndex, currentColumnIndex);
+        } else if (arrow === 'up') {
+          nextActive = getUpperCellIndex(currentRowIndex, currentColumnIndex);
+        } else if (arrow === 'down') {
+          nextActive = getLowerCellIndex(currentRowIndex, currentColumnIndex);
         }
 
         currentActiveCellIndex = nextActive || currentActiveCellIndex;
@@ -76,12 +75,30 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
         $td.find('input').focus();
       }
 
-      angular.element(document).keydown(function (e) {
-        if ([37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-          e.preventDefault();
-          calculateNextCellIndex(e);
+      // http://stackoverflow.com/a/10655273/2405040
+      var keyMap = {};
+
+      angular.element(document).on('keydown', function (e) {
+        var keyCode = e.keyCode;
+        keyMap[keyCode] = true;
+
+        var arrow;
+        if (keyCode === 37 || (keyMap[16] && keyMap[9])) {  // 16: shift key, 9: tab key
+          arrow = 'left';
+        } else if (keyCode === 38) {
+          arrow = 'up';
+        } else if (keyCode === 39 || keyCode === 9) {   // 39: right arrow, 9: tab key
+          arrow = 'right';
+        } else if (keyCode === 40) {
+          arrow = 'down';
+        }
+
+        if (arrow) {
+          calculateNextCellIndex(e, arrow);
           remarkActiveCell();
         }
+      }).on('keyup', function (e) {
+        keyMap[e.keyCode] = false;
       });
 
       angular.element(document).on('click', 'td', function () {
