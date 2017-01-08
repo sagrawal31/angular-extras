@@ -16,7 +16,7 @@ module.exports = function (grunt) {
     uglify: {
       build: {
         files: [{
-          '<%=yeoman.dist %>/core.min.js': ['<%=yeoman.src %>/app.js'],
+          '<%=yeoman.dist %>/core.min.js': ['<%=yeoman.src %>/app.js', '<%=yeoman.src %>/browser.js'],
           '<%=yeoman.dist %>/dom.min.js': ['<%=yeoman.src %>/extras/dom.js'],
           '<%=yeoman.dist %>/array.min.js': ['<%=yeoman.src %>/extras/array.js'],
           '<%=yeoman.dist %>/form-directives.min.js': ['<%=yeoman.src%>/directives/form/**.js'],
