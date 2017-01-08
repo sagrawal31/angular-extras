@@ -13,8 +13,8 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
    * @param rowIndex
    * @param columnIndex
    */
-  function getCellAt(rowIndex, columnIndex) {
-    return angular.element('tr:eq(' + rowIndex + ') td:eq(' + columnIndex + ')');
+  function getCellAt($tableElement, rowIndex, columnIndex) {
+    return $tableElement.find('tr:eq(' + rowIndex + ') td:eq(' + columnIndex + ')');
   }
 
   return {
@@ -23,13 +23,13 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
       var currentActiveCellIndex = 0;
 
       function getAboveOrBelowCellIndex(nextOrPreviousRowIndex, currentColumnIndex) {
-        var cell = getCellAt(nextOrPreviousRowIndex, currentColumnIndex);
+        var cell = getCellAt($element, nextOrPreviousRowIndex, currentColumnIndex);
         if (cell.length > 0) {
           return $element.find('td').index(cell);
         }
 
         for (var i = 1; i <= currentColumnIndex; i++) {
-          cell = getCellAt(nextOrPreviousRowIndex, currentColumnIndex - i);
+          cell = getCellAt($element, nextOrPreviousRowIndex, currentColumnIndex - i);
           if (cell.length > 0) {
             return $element.find('td').index(cell);
           }
@@ -46,7 +46,7 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
 
       function calculateNextCellIndex(e, arrow) {
         e.preventDefault();
-        var currentActiveCell = angular.element('table td.active-cell');
+        var currentActiveCell = $element.find('td.active-cell');
         var currentColumnIndex = currentActiveCell.index();
         var currentRowIndex = currentActiveCell.parent().index();
 
@@ -67,12 +67,12 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
       }
 
       function remarkActiveCell() {
-        angular.element('.active-cell input').blur();
-        angular.element('.active-cell').removeClass('active-cell');
+        $element.find('.active-cell input,textarea,select').blur();
+        $element.find('.active-cell').removeClass('active-cell');
 
-        var $td = angular.element('table tr td').eq(currentActiveCellIndex);
-        $td.addClass('active-cell');
-        $td.find('input').focus();
+        var $cellToMarkActive = $element.find('tr td:eq(' + currentActiveCellIndex + ')');
+        $cellToMarkActive.addClass('active-cell');
+        $cellToMarkActive.find('input,textarea,select').focus();
       }
 
       // http://stackoverflow.com/a/10655273/2405040
@@ -102,7 +102,7 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
       });
 
       angular.element(document).on('click', 'td', function () {
-        currentActiveCellIndex = angular.element(this).closest('table').find('td').index(this);
+        currentActiveCellIndex = angular.element(this).closest($element).find('td').index(this);
         remarkActiveCell();
       });
     }
