@@ -23,7 +23,7 @@
  *
  * See a working example here http://codepen.io/shashank-agrawal/pen/EZjBvz
  */
-angular.module('angular.extras.number.directives').directive('keyboardNavigation', function () {
+angular.module('angular.extras.core').directive('keyboardNavigation', function () {
 
   /**
    * Get the DOM element of the cell at given row index and given column index.
@@ -36,7 +36,7 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
 
   return {
     restrict: 'A',
-    link: function ($scope, $element) {
+    link: function ($scope, $element, $attr) {
       // Index of the cell (td) among all the cells (td)
       var currentActiveCellIndex = 0;
       var colspanEncountered = false, columnIndexBeforeColspan;
@@ -133,20 +133,26 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
       }
 
       function remarkActiveCell() {
-        //$element.find('.active-cell input,textarea,select').blur();
         $element.find('.active-cell').removeClass('active-cell');
 
         var $cellToMarkActive = $element.find('tr td:eq(' + currentActiveCellIndex + ')');
         $cellToMarkActive.addClass('active-cell');
-        $cellToMarkActive.find('input,textarea,select').focus();
+        var $input = $cellToMarkActive.find('input,textarea,select');
 
-        scrollViewToCell();
+        if ($input.length !== 0) {
+          $input.focus();
+        } else {
+          angular.element('input,textarea,select').blur();
+        }
+
+        if ($attr.hasOwnProperty('autoScrollToCell')) {
+          scrollViewToCell();
+        }
       }
 
       // http://stackoverflow.com/a/10655273/2405040
       var keyMap = {};
-
-      angular.element(document).on('keydown', function (e) {
+      var keydownEventListener = function (e) {
         var keyCode = e.keyCode;
         keyMap[keyCode] = true;
 
@@ -167,15 +173,25 @@ angular.module('angular.extras.number.directives').directive('keyboardNavigation
           calculateNextCellIndex(e, arrow);
           remarkActiveCell();
         }
-      }).on('keyup', function (e) {
-        keyMap[e.keyCode] = false;
-      });
+      };
 
-      angular.element(document).on('click', 'td', function () {
+      var keyupEventListener = function (e) {
+        keyMap[e.keyCode] = false;
+      };
+
+      var clickEventListener = function () {
         currentActiveCellIndex = angular.element(this).closest($element).find('td').index(this);
         // We'll not maintain the proper colspan position if user manually clicks somewhere
         colspanEncountered = false;
         remarkActiveCell();
+      };
+
+      angular.element(document).on('keydown', keydownEventListener).on('keyup', keyupEventListener);
+      angular.element(document).on('click', 'td', clickEventListener);
+
+      $scope.$on('$destroy', function () {
+        angular.element(document).off('keydown', keydownEventListener).off('keyup', keyupEventListener);
+        angular.element(document).off('click', 'td', clickEventListener);
       });
     }
   };
