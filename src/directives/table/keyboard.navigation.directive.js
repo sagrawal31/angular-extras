@@ -36,6 +36,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
 
   return {
     restrict: 'A',
+    scope: true,
     link: function ($scope, $element, $attr) {
       // Index of the cell (td) among all the cells (td)
       var currentActiveCellIndex = 0;
@@ -163,7 +164,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
           arrow = 'up';
         } else if (keyCode === 39 || keyCode === 9) {   // 39: right arrow, 9: tab key
           arrow = 'right';
-        } else if (keyCode === 40) {
+        } else if (keyCode === 40 || keyCode === 13) {
           arrow = 'down';
         }
 
@@ -187,11 +188,11 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
       };
 
       angular.element(document).on('keydown', keydownEventListener).on('keyup', keyupEventListener);
-      angular.element(document).on('click', 'td', clickEventListener);
+      angular.element($element).on('click', 'td', clickEventListener);
 
       $scope.$on('$destroy', function () {
         angular.element(document).off('keydown', keydownEventListener).off('keyup', keyupEventListener);
-        angular.element(document).off('click', 'td', clickEventListener);
+        angular.element($element).off('click', 'td', clickEventListener);
       });
     }
   };
