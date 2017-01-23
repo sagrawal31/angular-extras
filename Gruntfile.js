@@ -25,6 +25,7 @@ module.exports = function (grunt) {
           '<%=yeoman.dist %>/page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js'],
           '<%=yeoman.dist %>/table-directives.min.js': ['<%=yeoman.src%>/directives/table/**.js'],
           '<%=yeoman.dist %>/factories.min.js': ['<%=yeoman.src%>/factories/**.js'],
+          '<%=yeoman.dist %>/filters.min.js': ['<%=yeoman.src%>/filters/**.js'],
           '<%=yeoman.dist %>/spinner.min.js': ['<%=yeoman.src%>/spinner/**.js']
         }, {
           expand: true,
