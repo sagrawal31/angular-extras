@@ -45,11 +45,16 @@ Array.prototype.collate = function (collateSize) {
  */
 Array.prototype.indexOfWithKeyValue = function(key, value) {
   var index = -1;
-  angular.forEach(this, function(item, i) {
+  var _this = this;
+  // Use "for" loop instead of Angular's "forEach" to avoid iterating a large array since "forEach" doesn't support
+  // "break" https://github.com/angular/angular.js/issues/263#issuecomment-8153737
+  for (var i = 0; i < this.length; i++) {
+    var item = _this[i];
     if (item[key] === value) {
       index = i;
+      break;
     }
-  });
+  }
 
   return index;
 };
