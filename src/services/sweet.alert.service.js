@@ -31,6 +31,10 @@ angular.module('angular.extras.thirdparty.services').factory('SweetAlertService'
           onFailure();
         }
       });
+    },
+    confirmDanger: function (title, config, onConfirm, onFailure) {
+      config = angular.extend({}, {type: 'error', confirmButtonClass: 'btn-danger'}, config);
+      this.confirm(title, config, onConfirm, onFailure);
     }
   };
 }]);

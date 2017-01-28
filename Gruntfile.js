@@ -35,6 +35,14 @@ module.exports = function (grunt) {
           rename: function(dest, matchedSrcPath) {
             return dest + '/' + matchedSrcPath.replace('.js', '.min.js');
           }
+        }, {
+          expand: true,
+          cwd: '<%=yeoman.src%>/directives/extend',
+          src: '**/*',
+          dest: '<%=yeoman.dist %>',
+          rename: function(dest, matchedSrcPath) {
+            return dest + '/' + matchedSrcPath.replace('.js', '.min.js');
+          }
         }]
       }
     },
