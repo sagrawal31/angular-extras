@@ -31,16 +31,24 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
    * @param columnIndex
    */
   function getCellAt($tableElement, rowIndex, columnIndex) {
+    if (rowIndex === null) {
+      return $tableElement.find('tr td:eq(' + columnIndex + ')');
+    }
+
     return $tableElement.find('tr:eq(' + rowIndex + ') td:eq(' + columnIndex + ')');
   }
+
+  var typableSelector = ['input', 'select', 'textarea'].join(':not(:disabled):not([readonly]),');
 
   return {
     restrict: 'A',
     scope: true,
     link: function ($scope, $element, $attr) {
       // Index of the cell (td) among all the cells (td)
-      var currentActiveCellIndex = 0;
+      var currentActiveCellIndex = 0, recursiveCallCount = 0, lastCellIndexWithInput;
       var colspanEncountered = false, columnIndexBeforeColspan;
+
+      var onlySelectCellWithInput = $attr.autoScrollToCell === undefined || $attr.autoScrollToCell === true;
 
       function getAboveOrBelowCellIndex(rowIndex, currentColumnIndex) {
         // Suppose we are on C3 and hit the down key, then we check if a cell exists at C4
@@ -99,7 +107,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
       }
 
       function calculateNextCellIndex(e, arrow) {
-        var currentActiveCell = $element.find('td.active-cell');
+        var currentActiveCell = getCellAt($element, null, currentActiveCellIndex);
         // Index of the active column among all columns in the current/parent row
         var currentColumnIndex = colspanEncountered ? columnIndexBeforeColspan : currentActiveCell.index();
         // Index of the current row amount all rows
@@ -118,6 +126,32 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
         } else if (arrow === 'down') {
           currentActiveCellIndex = getLowerCellIndex(currentRowIndex, currentColumnIndex);
         }
+
+        if (onlySelectCellWithInput) {
+          var totalColumns = $element.find('td').length;
+          var $cell = getCellAt($element, null, currentActiveCellIndex);
+          var $input = $cell.find(typableSelector);
+
+          // After navigation, if next active cell doesn't have any input fields then do a recursive call
+          // to find the next active cell till we find a cell with an input field
+          if ($input.length === 0) {
+            // The recursive call count can not be greater then then number of columns to lookup the next cell with
+            // an input. TODO This might be the worst fix to handle stackoverflow due to recursive calls.
+            var recursiveCallExceededNumberOfColumns = recursiveCallCount > totalColumns;
+
+            if (!recursiveCallExceededNumberOfColumns) {
+              recursiveCallCount++;
+              console.log('Recursive call to find the next active cell with any input');
+              calculateNextCellIndex(e, arrow);
+            } else {
+              recursiveCallCount = 0;
+              // Now since we didn't find any next active cell with an input after searching for n number of times
+              // (n = number of columns), we can just reset the current cell index to the last cell index that has
+              // an input
+              currentActiveCellIndex = lastCellIndexWithInput;
+            }
+          }
+        }
       }
 
       function scrollViewToCell() {
@@ -134,6 +168,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
       }
 
       function remarkActiveCell() {
+        recursiveCallCount = 0;
         $element.find('.active-cell').removeClass('active-cell');
 
         var $cellToMarkActive = $element.find('tr td:eq(' + currentActiveCellIndex + ')');
@@ -142,6 +177,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
 
         if ($input.length !== 0) {
           $input.focus();
+          lastCellIndexWithInput = currentActiveCellIndex;
         } else {
           angular.element('input,textarea,select').blur();
         }
@@ -187,11 +223,14 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
         remarkActiveCell();
       };
 
-      angular.element(document).on('keydown', keydownEventListener).on('keyup', keyupEventListener);
+      // Click event can be listened on a particular td element but keydown events can only be listen if td has input
+      // So if want to navigate to input with non-editable cells then we need to register the listner on document
+      var elementToRegisterEvent = onlySelectCellWithInput ? $element : document;
+      angular.element(elementToRegisterEvent).on('keydown', keydownEventListener).on('keyup', keyupEventListener);
       angular.element($element).on('click', 'td', clickEventListener);
 
       $scope.$on('$destroy', function () {
-        angular.element(document).off('keydown', keydownEventListener).off('keyup', keyupEventListener);
+        angular.element(elementToRegisterEvent).off('keydown', keydownEventListener).off('keyup', keyupEventListener);
         angular.element($element).off('click', 'td', clickEventListener);
       });
     }
