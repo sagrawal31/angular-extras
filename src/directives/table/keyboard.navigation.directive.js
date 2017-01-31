@@ -32,10 +32,10 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
    */
   function getCellAt($tableElement, rowIndex, columnIndex) {
     if (rowIndex === null) {
-      return $tableElement.find('tr td:eq(' + columnIndex + ')');
+      return $tableElement.find('tbody tr td:eq(' + columnIndex + ')');
     }
 
-    return $tableElement.find('tr:eq(' + rowIndex + ') td:eq(' + columnIndex + ')');
+    return $tableElement.find('tbody tr:eq(' + rowIndex + ') td:eq(' + columnIndex + ')');
   }
 
   var typableSelector = ['input', 'select', 'textarea'].join(':not(:disabled):not([readonly]),');
@@ -155,7 +155,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
       }
 
       function scrollViewToCell() {
-        var target = $element.find('td:eq(' + currentActiveCellIndex + ')');
+        var target = getCellAt($element, null, currentActiveCellIndex);
         if (target.length) {
           var top = target.offset().top;
 
@@ -171,7 +171,7 @@ angular.module('angular.extras.core').directive('keyboardNavigation', function (
         recursiveCallCount = 0;
         $element.find('.active-cell').removeClass('active-cell');
 
-        var $cellToMarkActive = $element.find('tr td:eq(' + currentActiveCellIndex + ')');
+        var $cellToMarkActive = getCellAt($element, null, currentActiveCellIndex);
         $cellToMarkActive.addClass('active-cell');
         var $input = $cellToMarkActive.find('input,textarea,select');
 
