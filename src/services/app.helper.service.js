@@ -20,6 +20,21 @@ angular.module('angular.extras.thirdparty.services').service('AppHelperService',
     this.isLoggedIn = false;
   };
 
+  this.resumeURLRouter = function () {
+    if (!$injector.has('$urlRouter')) {
+      return;
+    }
+
+    // Getting the dependency dynamically to avoid the dependency of ui-router library where it is not used
+    var $urlRouter = $injector.get('$urlRouter');
+
+    // Once permissions are set-up
+    // kick-off router and start the application rendering
+    $urlRouter.sync();
+    // Also enable router to listen to url changes
+    $urlRouter.listen();
+  };
+
   this.setGlobalScope = function (scope) {
     this.globalScope = scope;
     this.globalVM = this.globalScope.globalCtrl;
@@ -36,6 +51,7 @@ angular.module('angular.extras.thirdparty.services').service('AppHelperService',
       return;
     }
 
+    // Getting the dependency dynamically to avoid the dependency of ui-router library where it is not used
     var PermRoleStore = $injector.get('PermRoleStore');
     var PermPermissionStore = $injector.get('PermPermissionStore');
 

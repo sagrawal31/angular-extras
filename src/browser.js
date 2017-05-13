@@ -36,7 +36,7 @@ var isEdge = window.navigator.userAgent.indexOf('Edge') > -1;
 var isChrome = !!window.chrome && !isOpera && !isEdge;
 // At least IE6
 var isIE = /*@cc_on!@*/false || !!document.documentMode;
-var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(window.navigator.userAgent);
+var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Silk/i.test(window.navigator.userAgent);
 
 // Detect Mobile Browser
 if(isMobile) {
@@ -78,3 +78,6 @@ var browserType = isOpera ? 'opera' : (isFirefox ? 'firefox' : (isSafari ? 'safa
 
 // Add type of browser to body class. Example: chrome-browser
 angular.element(document.body).addClass('is-' + browserType);
+
+// https://blog.mariusschulz.com/2015/04/08/detecting-minified-javascript-code
+window.isUnminified = /param/.test(function(param) {});  // jshint ignore:line
