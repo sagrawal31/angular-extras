@@ -7,6 +7,7 @@
     "grunt-bump": "^0.8.0",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-ng-annotate": "^3.0.0",
     "matchdep": "*"
   }
 }

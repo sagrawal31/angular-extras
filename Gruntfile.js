@@ -13,26 +13,38 @@ module.exports = function (grunt) {
 
   return grunt.initConfig({
     yeoman: yeomanConfig,
+    // ng-annotate tries to make the code safe for minification automatically
+    // by using the Angular long form for dependency injection.
+    ngAnnotate: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%=yeoman.src %>',
+          src: '**/*.js',
+          dest: '.tmp/scripts'
+        }]
+      }
+    },
     uglify: {
       build: {
         files: [{
-          '<%=yeoman.dist %>/core.min.js': ['<%=yeoman.src %>/app.js', '<%=yeoman.src %>/browser.js'],
-          '<%=yeoman.dist %>/dom.min.js': ['<%=yeoman.src %>/extras/dom.js'],
-          '<%=yeoman.dist %>/array.min.js': ['<%=yeoman.src %>/extras/array.js'],
-          '<%=yeoman.dist %>/form-directives.min.js': ['<%=yeoman.src%>/directives/form/**.js'],
-          '<%=yeoman.dist %>/list-directives.min.js': ['<%=yeoman.src%>/directives/list/**.js'],
-          '<%=yeoman.dist %>/number-directives.min.js': ['<%=yeoman.src%>/directives/number/**.js'],
-          '<%=yeoman.dist %>/page-directives.min.js': ['<%=yeoman.src%>/directives/page/**.js'],
-          '<%=yeoman.dist %>/table-directives.min.js': ['<%=yeoman.src%>/directives/table/**.js'],
-          '<%=yeoman.dist %>/factories.min.js': ['<%=yeoman.src%>/factories/**.js'],
-          '<%=yeoman.dist %>/filters.min.js': ['<%=yeoman.src%>/filters/**.js'],
-          '<%=yeoman.dist %>/spinner.min.js': ['<%=yeoman.src%>/spinner/**.js']
+          '<%=yeoman.dist %>/core.min.js': ['.tmp/scripts/app.js', '.tmp/scripts/browser.js', '.tmp/scripts/config.js'],
+          '<%=yeoman.dist %>/dom.min.js': ['.tmp/scripts/extras/dom.js'],
+          '<%=yeoman.dist %>/array.min.js': ['.tmp/scripts/extras/array.js'],
+          '<%=yeoman.dist %>/form-directives.min.js': ['.tmp/scripts/directives/form/**.js'],
+          '<%=yeoman.dist %>/list-directives.min.js': ['.tmp/scripts/directives/list/**.js'],
+          '<%=yeoman.dist %>/number-directives.min.js': ['.tmp/scripts/directives/number/**.js'],
+          '<%=yeoman.dist %>/page-directives.min.js': ['.tmp/scripts/directives/page/**.js'],
+          '<%=yeoman.dist %>/table-directives.min.js': ['.tmp/scripts/directives/table/**.js'],
+          '<%=yeoman.dist %>/factories.min.js': ['.tmp/scripts/factories/**.js'],
+          '<%=yeoman.dist %>/filters.min.js': ['.tmp/scripts/filters/**.js'],
+          '<%=yeoman.dist %>/spinner.min.js': ['.tmp/scripts/spinner/**.js']
         }, {
           expand: true,
           cwd: '<%=yeoman.src%>/services',
           src: '**/*',
           dest: '<%=yeoman.dist %>',
-          rename: function(dest, matchedSrcPath) {
+          rename: function (dest, matchedSrcPath) {
             return dest + '/' + matchedSrcPath.replace('.js', '.min.js');
           }
         }, {
@@ -40,7 +52,7 @@ module.exports = function (grunt) {
           cwd: '<%=yeoman.src%>/directives/extend',
           src: '**/*',
           dest: '<%=yeoman.dist %>',
-          rename: function(dest, matchedSrcPath) {
+          rename: function (dest, matchedSrcPath) {
             return dest + '/' + matchedSrcPath.replace('.js', '.min.js');
           }
         }]
@@ -68,11 +80,11 @@ module.exports = function (grunt) {
     watch: {
       scripts: {
         files: ['<%=yeoman.src %>/**/*.js'],
-        tasks: ['uglify'],
+        tasks: ['ngAnnotate', 'uglify'],
         options: {
           spawn: false
         }
       }
     }
-  }, grunt.registerTask('default', ['uglify']));
+  }, grunt.registerTask('default', ['ngAnnotate', 'uglify']));
 };
