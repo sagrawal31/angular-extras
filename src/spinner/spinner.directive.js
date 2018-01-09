@@ -4,9 +4,9 @@
 
 
 /**
- * Use like <any-element class="some-class" spinner promise="scopePromiseVariable"></any-element>
+ * Use like <any-element class="some-class" ae-spinner promise="scopePromiseVariable"></any-element>
  */
-angular.module('angular.extras.spinner').directive('spinner', ['$templateCache', '$injector', function ($templateCache, $injector) {
+angular.module('angular.extras.spinner').directive('AeSpinner', ['$templateCache', '$injector', function ($templateCache, $injector) {
   var constantName = 'angular.extras.spinner.global.template';
 
   return {
