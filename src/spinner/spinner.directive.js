@@ -13,6 +13,7 @@ angular.module('angular.extras.spinner').directive('aeSpinner', ['$templateCache
     restrict: 'A',
     scope: {
       promise: '=',
+      boolean: '=',
       template: '='
     },
     link: function ($scope, $element) {
@@ -33,6 +34,14 @@ angular.module('angular.extras.spinner').directive('aeSpinner', ['$templateCache
         $element.removeClass('disabled');
         $element.find('.spinner-wrapper').remove();
       }
+
+      $scope.$watch('boolean', function (newValue) {
+        if (newValue) {
+          showSpinner();
+        } else {
+          hideSpinner();
+        }
+      });
 
       $scope.$watch('promise', function (newPromise) {
         if (newPromise) {
