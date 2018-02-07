@@ -38,6 +38,7 @@ module.exports = function (grunt) {
           '<%=yeoman.dist %>/table-directives.min.js': ['.tmp/scripts/directives/table/**.js'],
           '<%=yeoman.dist %>/factories.min.js': ['.tmp/scripts/factories/**.js'],
           '<%=yeoman.dist %>/filters.min.js': ['.tmp/scripts/filters/**.js'],
+          '<%=yeoman.dist %>/ng-table-extras.min.js': ['.tmp/scripts/ng-table/**.js'],
           '<%=yeoman.dist %>/spinner.min.js': ['.tmp/scripts/spinner/**.js']
         }, {
           expand: true,
