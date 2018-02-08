@@ -68,6 +68,22 @@ angular
             if (settings.paramsAsURL) {
               var temporaryParams = angular.copy(basicParams);
               temporaryParams.filters = JSON.stringify(temporaryParams.filters);
+
+              /**
+               * For the first time only, replace the current history so that we are not getting the previous URL
+               * without parameters when we navigate back. For example: User is at "http://example.com/dashboard" &
+               * clicks the link for the user listing page and landed at "http://example.com/users" and due to
+               * default filters, the URL will be changed to
+               * "http://example.com/users?max=10&page=1&filters=%7B%7D&sort=id&order=asc" but if we don't add this
+               * check and hit the back button, user will be taken at "http://example.com/users" and then on the
+               * next click user will be taken back to "http://example.com/dashboard" which is not correct. So
+               * replacing the history with default parameters.
+               */
+              if (!params.historyReplaced) {
+                $location.replace();
+                params.historyReplaced = true;
+              }
+
               $location.search(temporaryParams);
             }
 
