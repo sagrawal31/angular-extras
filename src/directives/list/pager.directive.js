@@ -7,12 +7,12 @@
  * of records being shown out of total number of available records in a listing page.
  * @example
  * <code>
- *      <pager-info max="itemsPerPage" page="currentPage" total="totalCount" />
+ *      <ae-pager-info max="itemsPerPage" page="currentPage" total="totalCount" />
  * </code>
  *
  * Use of this directive will show info for example as, "Showing from 11 to 20 of 100"
  */
-angular.module('angular.extras.list.directives').directive('pagerInfo', function () {
+angular.module('angular.extras.list.directives').directive('aePagerInfo', function () {
   return {
     restrict: 'E',
     scope: {

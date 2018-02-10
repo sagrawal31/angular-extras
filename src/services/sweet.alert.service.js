@@ -2,7 +2,7 @@
 
 /* Specific to our personal use across projects */
 
-angular.module('angular.extras.thirdparty.services').factory('SweetAlertService', ['SweetAlert', function (SweetAlert) {
+angular.module('angular.extras.thirdparty').factory('SweetAlertService', ['SweetAlert', function (SweetAlert) {
 
   return {
     swal: SweetAlert.swal,

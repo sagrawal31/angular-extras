@@ -7,7 +7,7 @@ angular.module('angular.extras.list.directives', []);
 angular.module('angular.extras.page.directives', []);
 angular.module('angular.extras.page.directives', []);
 angular.module('angular.extras.number.directives', []);
-angular.module('angular.extras.thirdparty.services', []);
+angular.module('angular.extras.thirdparty', []);
 angular.module('angular.extras.core.factories', []);
 angular.module('angular.extras.spinner', []);
 angular.module('angular.extras.filters', []);
@@ -19,7 +19,7 @@ angular.module('angular.extras', [
   'angular.extras.form.directives',
   'angular.extras.list.directives',
   'angular.extras.number.directives',
-  'angular.extras.thirdparty.services',
+  'angular.extras.thirdparty',
   'angular.extras.core.factories',
   'angular.extras.spinner',
   'angular.extras.filters'

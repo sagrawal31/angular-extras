@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angular.extras.thirdparty.services').service('AppHelperService', ['$injector', function ($injector) {
+angular.module('angular.extras.thirdparty').service('AppHelperService', ['$injector', function ($injector) {
 
   var _this = this;
 
