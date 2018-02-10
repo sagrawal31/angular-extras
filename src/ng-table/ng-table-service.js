@@ -6,34 +6,33 @@ angular
   .module('angular.extras.thirdparty')
   .factory('AeNgTableService', function (NgTableParams, $q, $location) {
 
-    function _updateParams(ngTableParams, newParams) {
-      if (newParams.max) {
-        ngTableParams.count(newParams.max);
+    function _mergeParamsFromURLToBaseParams(baseNgTableParameters, paramsFromURL) {
+      if (paramsFromURL.max) {
+        baseNgTableParameters.max = paramsFromURL.max;
       }
 
-      if (newParams.page) {
-        ngTableParams.page(newParams.page);
+      if (paramsFromURL.page) {
+        baseNgTableParameters.page = paramsFromURL.page;
       }
 
-      if (newParams.sort) {
-        var sorting = {};
-        sorting[newParams.sort] = newParams.order || 'asc';
-        ngTableParams.sorting(sorting);
+      if (paramsFromURL.sort) {
+        baseNgTableParameters.sorting = baseNgTableParameters.sorting || {};
+        baseNgTableParameters.sorting[paramsFromURL.sort] = paramsFromURL.order || 'asc';
       }
 
-      if (newParams.filters) {
-        var filters = newParams.filters;
+      if (paramsFromURL.filters) {
+        var filters = paramsFromURL.filters;
 
-        if (typeof newParams.filters === 'string') {
+        if (typeof paramsFromURL.filters === 'string') {
           try {
-            filters = JSON.parse(newParams.filters);
+            filters = JSON.parse(paramsFromURL.filters);
+            baseNgTableParameters.filter = baseNgTableParameters.filter || {};
+            // Only merge filters
+            angular.extend(baseNgTableParameters.filter, filters);
           } catch (e) {
-            filters = {};
-            console.error('Error parsing filters.', e);
+            console.error('Error parsing paramsFromURL filters', e);
           }
         }
-
-        ngTableParams.filter(filters);
       }
     }
 
@@ -50,6 +49,10 @@ angular
         };
 
         angular.extend(baseNgTableParameters, customNgTableParameters);
+
+        if (settings.paramsAsURL) {
+          _mergeParamsFromURLToBaseParams(baseNgTableParameters, $location.search());
+        }
 
         var initialSettings = {
           getData: function (params) {
@@ -77,11 +80,10 @@ angular
                * "http://example.com/users?max=10&page=1&filters=%7B%7D&sort=id&order=asc" but if we don't add this
                * check and hit the back button, user will be taken at "http://example.com/users" and then on the
                * next click user will be taken back to "http://example.com/dashboard" which is not correct. So
-               * replacing the history with default parameters.
+               * replacing the previous history state with default parameters.
                */
-              if (!params.historyReplaced) {
+              if (!params.firstTimeExecuted) {
                 $location.replace();
-                params.historyReplaced = true;
               }
 
               $location.search(temporaryParams);
@@ -105,6 +107,8 @@ angular
               }
             }, deferred.reject);
 
+            params.firstTimeExecuted = true;
+
             // Make the API call promise available to the NgTableParams instance for external use
             params.dataPromise = deferred.promise;
             return deferred.promise;
@@ -123,12 +127,7 @@ angular
           return {sort: currentSortKey, order: currentSort[currentSortKey]};
         };
 
-        if (settings.paramsAsURL) {
-          _updateParams(ngTableParams, $location.search());
-        }
-
         return ngTableParams;
-      },
-      updateParams: _updateParams
+      }
     };
   });
