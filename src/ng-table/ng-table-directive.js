@@ -37,8 +37,19 @@ angular.module('angular.extras.thirdparty')
         link: function ($scope) {
           var ngTableParams = $scope.ngTableParams;
 
-          $scope.$on('$locationChangeSuccess', function () {
-            _updateParams(ngTableParams, $location.search());
+          $scope.$on('$locationChangeSuccess', function (e, newURL, oldURL) {
+            var updateParameters = true;
+
+            if (newURL && oldURL) {
+              var newURLBasePath = newURL.substring(0, newURL.indexOf('?'));
+              var oldURLBasePath = oldURL.substring(0, oldURL.indexOf('?'));
+              // only update the URL if we are on the same state/route not while changing the state/route
+              updateParameters = newURLBasePath === oldURLBasePath;
+            }
+
+            if (updateParameters) {
+              _updateParams(ngTableParams, $location.search());
+            }
           });
         }
       };
