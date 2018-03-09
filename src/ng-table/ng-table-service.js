@@ -8,7 +8,7 @@ angular
 
     function _mergeParamsFromURLToBaseParams(baseNgTableParameters, paramsFromURL) {
       if (paramsFromURL.max) {
-        baseNgTableParameters.max = paramsFromURL.max;
+        baseNgTableParameters.count = paramsFromURL.max;
       }
 
       if (paramsFromURL.page) {
